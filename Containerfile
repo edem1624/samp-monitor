@@ -1,5 +1,7 @@
 FROM alpine:3.19
 
+LABEL org.opencontainers.image.source=https://github.com/edem1624/samp-monitor
+
 ENV PYTHONUNBUFFERED=1
 
 # Install Python
