@@ -40,7 +40,7 @@ def main():
 
     url = os.getenv('DISCORD_WEBHOOK')
     server_host = os.getenv('SAMP_SERVER_HOST')
-    server_port = int(os.getenv('SAMP_SERVER_PORT'))
+    server_port = int(os.getenv('SAMP_SERVER_PORT', '7777'))
 
     if url is None:
         logging.critical("DISCORD_WEBHOOK must be defined!")
@@ -54,17 +54,20 @@ def main():
     while True:
 
         with SampClient(address=server_host, port=server_port) as client:
-            info = client.get_server_info()
-            logging.info(info)
-            if int(info.players) > 0:
-                if len([player.name for player in client.get_server_clients_detailed()]) == 0:
-                    continue
-                current = ', '.join(
-                    [player.name for player in client.get_server_clients_detailed()]
-                )
-            else:
-                current = 'No Players'
-            print(current)
+            try:
+                info = client.get_server_info()
+                logging.info(info)
+                if int(info.players) > 0:
+                    if len([player.name for player in client.get_server_clients_detailed()]) == 0:
+                        continue
+                    current = ', '.join(
+                        [player.name for player in client.get_server_clients_detailed()]
+                    )
+                else:
+                    current = 'No Players'
+                print(current)
+            except:
+                logging.info("Error occured during getting server info")
             if players != current:
                 players = current
                 data = {
